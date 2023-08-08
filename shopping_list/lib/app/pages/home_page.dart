@@ -18,33 +18,35 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text("ShoppingList"),
         ),
-        body: const Column(
-          children: [
-            TabBar(
-              tabs: [
-                Tab(
-                  icon: Icon(
-                    Icons.list_alt,
-                    color: Colors.green,
+        body: const SafeArea(
+          child: Column(
+            children: [
+              TabBar(
+                tabs: [
+                  Tab(
+                    icon: Icon(
+                      Icons.list_alt,
+                      color: Colors.green,
+                    ),
                   ),
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.list,
-                    color: Colors.green,
+                  Tab(
+                    icon: Icon(
+                      Icons.list,
+                      color: Colors.green,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  ShoppingList(),
-                  MessageList(),
                 ],
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    ShoppingList(),
+                    MessageList(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shopping_list/app/utils/db_utils.dart';
 
 class ShopItem {
@@ -12,6 +13,13 @@ class ShopItem {
       id: map[DBUtils.idColumn],
       isAdded: map[DBUtils.isAddedColumn],
       itemName: map[DBUtils.itemNameColumn],
+    );
+  }
+
+  factory ShopItem.fromItemStr(String itemName) {
+    return ShopItem(
+      isAdded: false,
+      itemName: itemName,
     );
   }
 

@@ -6,15 +6,20 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+          appBarTheme: const AppBarTheme(
+            centerTitle: true,
+          ),
         ),
+        home: const HomePage(),
       ),
-      home: const HomePage(),
     );
   }
 }

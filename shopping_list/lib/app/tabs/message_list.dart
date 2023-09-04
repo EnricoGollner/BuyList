@@ -35,7 +35,7 @@ class _MessageListState extends State<MessageList> {
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(top: 20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
               "Lista de compras:",
@@ -62,21 +62,20 @@ class _MessageListState extends State<MessageList> {
                 },
               ),
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Adicionando lista..."),
-                        duration: Duration(seconds: 1, milliseconds: 2),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  }
-                },
-                child: const Text("Salvar lista"),
-              ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Adicionando lista..."),
+                      duration: Duration(seconds: 1, milliseconds: 2),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              },
+              child: const Text("Salvar lista"),
             )
           ],
         ),

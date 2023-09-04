@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:shopping_list/app/utils/db_utils.dart';
 
 class ShopItem {

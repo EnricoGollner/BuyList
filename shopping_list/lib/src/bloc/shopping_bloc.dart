@@ -6,7 +6,7 @@ import 'package:shopping_list/src/data/models/shop_item.dart';
 import 'package:shopping_list/src/data/repositories/shopping_repository.dart';
 
 class ShoppingBloc {
-  final ShoppingRepository shoppingRepository = ShoppingRepository();
+  final ShoppingRepository shoppingRepository;
 
   final StreamController<ShoppingEvent> _inputItemsController =
       StreamController<ShoppingEvent>();
@@ -19,7 +19,7 @@ class ShoppingBloc {
   ///Getter of items state stream controller - from where we can access state
   Stream<ShoppingState> get stream => _outputItemsController.stream;
 
-  ShoppingBloc() {
+  ShoppingBloc({required this.shoppingRepository}) {
     _inputItemsController.stream.listen((event) async {
       _mapEventToState(event);
     });

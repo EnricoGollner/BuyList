@@ -24,7 +24,8 @@ class ShoppingListApp extends StatelessWidget {
             create: (context) => ShoppingRepository(),
           ),
           Provider<ShoppingBloc>(
-            create: (context) => ShoppingBloc(),
+            create: (context) => ShoppingBloc(
+                shoppingRepository: context.read<ShoppingRepository>()),
           )
         ],
         child: const HomePage(),

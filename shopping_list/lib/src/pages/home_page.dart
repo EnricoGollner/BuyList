@@ -4,7 +4,7 @@ import 'package:shopping_list/src/bloc/shopping_bloc.dart';
 import 'package:shopping_list/src/bloc/shopping_events.dart';
 import 'package:shopping_list/src/bloc/shopping_state.dart';
 import 'package:shopping_list/src/data/models/shop_item.dart';
-import 'package:shopping_list/src/pages/widgets/shopping_list.dart';
+import 'package:shopping_list/src/pages/widgets/box_shopping_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,20 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final ShoppingBloc bloc;
-
   @override
   void initState() {
     super.initState();
 
-    bloc = Provider.of<ShoppingBloc>(context);
-    bloc.inputClient.add(LoadShoppingEvent());
+    context.read<ShoppingBloc>().inputClient.add(LoadShoppingEvent());
   }
 
   @override
   void dispose() {
     super.dispose();
-    bloc.inputClient.close();
+    context.read<ShoppingBloc>().inputClient.close();
   }
 
   @override
@@ -37,7 +34,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Shopping List"),
       ),
       body: StreamBuilder(
-          stream: bloc.stream,
+          stream: context.read<ShoppingBloc>().stream,
           builder: (context, snaphot) {
             List<ShopItem> shopItemsList = [];
 
@@ -54,9 +51,9 @@ class _HomePageState extends State<HomePage> {
                 );
 
               case ShoppingSuccessState:
-                return ShoppingList(shopItemsList: shopItemsList);
+                return BoxShoppingList(shopItemsList: shopItemsList);
               default:
-                return const ShoppingList(shopItemsList: []);
+                return const BoxShoppingList(shopItemsList: []);
             }
           }),
       bottomNavigationBar: BottomNavigationBar(

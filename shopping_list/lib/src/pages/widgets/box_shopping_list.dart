@@ -6,16 +6,16 @@ import 'package:shopping_list/src/bloc/shopping_events.dart';
 import 'package:shopping_list/src/data/models/shop_item.dart';
 import 'package:shopping_list/src/utils/validator.dart';
 
-class ShoppingList extends StatefulWidget {
+class BoxShoppingList extends StatefulWidget {
   final List<ShopItem> shopItemsList;
 
-  const ShoppingList({super.key, required this.shopItemsList});
+  const BoxShoppingList({super.key, required this.shopItemsList});
 
   @override
-  State<ShoppingList> createState() => _ShoppingListState();
+  State<BoxShoppingList> createState() => _BoxShoppingListState();
 }
 
-class _ShoppingListState extends State<ShoppingList> {
+class _BoxShoppingListState extends State<BoxShoppingList> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _itemToShopCtrl = TextEditingController();
 
@@ -71,7 +71,8 @@ class _ShoppingListState extends State<ShoppingList> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Provider.of<ShoppingBloc>(context)
+                                      context
+                                          .read<ShoppingBloc>()
                                           .inputClient
                                           .add(
                                             RemoveShoppingEvent(
@@ -108,7 +109,8 @@ class _ShoppingListState extends State<ShoppingList> {
   }
 
   void _addItem({required ShopItem itemToShop}) {
-    Provider.of<ShoppingBloc>(context)
+    context
+        .read<ShoppingBloc>()
         .inputClient
         .add(AddShoppingEvent(item: itemToShop));
   }

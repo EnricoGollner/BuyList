@@ -1,14 +1,14 @@
-import 'package:shopping_list/app/data/models/shop_item.dart';
+import 'package:shopping_list/src/data/models/shop_item.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../utils/db_utils.dart';
 
-class ItemShopHelper {
-  static final _instance = ItemShopHelper.internal();
+class ShoppingRepository {
+  static final _instance = ShoppingRepository.internal(); // Singleton
 
-  factory ItemShopHelper() => _instance;
+  factory ShoppingRepository() => _instance;
 
-  ItemShopHelper.internal();
+  ShoppingRepository.internal();
 
   Database? _db;
 
@@ -42,7 +42,7 @@ class ItemShopHelper {
     return item;
   }
 
-  Future<List<ShopItem>?> getAllItemsToShop() async {
+  Future<List<ShopItem>> getAllItemsToShop() async {
     Database? dbItemsToShop = await db;
 
     List<Map<String, dynamic>>? listMap = await dbItemsToShop
@@ -57,7 +57,7 @@ class ItemShopHelper {
       return listItemsToShop;
     }
 
-    return null;
+    return [];
   }
 
   Future<ShopItem?> getOneItem(int itemToShopId) async {
@@ -67,7 +67,7 @@ class ItemShopHelper {
       DBUtils.itemsToShopTable,
       columns: [
         DBUtils.idColumn,
-        DBUtils.isAddedColumn,
+        DBUtils.isBought,
         DBUtils.itemNameColumn,
       ],
       where: "${DBUtils.idColumn} = ?",

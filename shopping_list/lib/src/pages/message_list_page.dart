@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_list/app/data/models/shop_item.dart';
 
 class MessageList extends StatefulWidget {
   const MessageList({super.key});
@@ -11,22 +10,6 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _listController = TextEditingController();
-
-  List<String> formatToList(String listMessage) {
-    List<String> list = listMessage.split("\n");
-
-    return list;
-  }
-
-  void add(String listMessage) {
-    List<String> listFromMessage = formatToList(listMessage);
-
-    List<ShopItem> list = listFromMessage
-        .map(
-          (item) => ShopItem.fromItemStr(item),
-        )
-        .toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +27,13 @@ class _MessageListState extends State<MessageList> {
                 color: Color.fromARGB(255, 25, 88, 26),
               ),
             ),
+            const SizedBox(height: 10),
             Form(
               key: _formKey,
               child: TextFormField(
                 controller: _listController,
                 keyboardType: TextInputType.multiline,
-                maxLines: 10,
+                maxLines: 15,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: "Exemplo:\nArroz\nFeijão\nAlface\n...",
@@ -64,6 +48,8 @@ class _MessageListState extends State<MessageList> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(padding: const EdgeInsets.all(14)),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -82,4 +68,19 @@ class _MessageListState extends State<MessageList> {
       ),
     );
   }
+
+  List<String> formatToList(String listMessage) {
+    List<String> list = listMessage.split("\n");
+    return list;
+  }
+
+  // void add(String listMessage) {
+  //   List<String> listFromMessage = formatToList(listMessage);
+
+  //   List<ShopItem> list = listFromMessage
+  //       .map(
+  //         (item) => ShopItem.fromItemStr(item),
+  //       )
+  //       .toList();
+  // }
 }

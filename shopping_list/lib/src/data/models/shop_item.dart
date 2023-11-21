@@ -1,30 +1,30 @@
-import 'package:shopping_list/app/utils/db_utils.dart';
+import 'package:shopping_list/src/utils/db_utils.dart';
 
 class ShopItem {
   int? id;
-  bool isAdded;
+  bool isBought;
   String itemName;
 
-  ShopItem({this.id, required this.isAdded, required this.itemName});
+  ShopItem({this.id, required this.isBought, required this.itemName});
 
   factory ShopItem.fromMap(Map<String, dynamic> map) {
     return ShopItem(
       id: map[DBUtils.idColumn],
-      isAdded: map[DBUtils.isAddedColumn],
+      isBought: map[DBUtils.isBought] != 0,
       itemName: map[DBUtils.itemNameColumn],
     );
   }
 
   factory ShopItem.fromItemStr(String itemName) {
     return ShopItem(
-      isAdded: false,
+      isBought: false,
       itemName: itemName,
     );
   }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
-      DBUtils.isAddedColumn: isAdded,
+      DBUtils.isBought: isBought ? 1 : 0,
       DBUtils.itemNameColumn: itemName,
     };
 
@@ -35,6 +35,6 @@ class ShopItem {
 
   @override
   String toString() {
-    return "Contato(id: $id, isAdded: $isAdded, itemName: $itemName)";
+    return "Contato(id: $id, isAdded: $isBought, itemName: $itemName)";
   }
 }

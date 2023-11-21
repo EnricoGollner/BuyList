@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'app/main_app.dart';
+import 'src/shopping_list_app.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const ShoppingListApp());
 }

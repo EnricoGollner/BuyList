@@ -7,7 +7,7 @@ class DBUtils {
 
   static const String createTableQuery =
       "CREATE TABLE ${DBUtils.itemsToShopTable}("
-      "${DBUtils.idColumn} INTEGER PRIMARY KEY,"
+      "${DBUtils.idColumn} VARCHAR(50) PRIMARY KEY,"
       "${DBUtils.isBought} INTEGER,"
       "${DBUtils.itemNameColumn} VARCHAR(100)"
       ")";

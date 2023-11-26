@@ -3,7 +3,7 @@ import 'package:shopping_list/src/data/models/shop_item.dart';
 
 class ShoppingState {
   final String responseMensage;
-  final List<ShopItem> itemsList;
+  final List<ItemToShop> itemsList;
 
   ShoppingState({this.responseMensage = '', required this.itemsList});
 }
@@ -17,7 +17,7 @@ class ShoppingLoadingState extends ShoppingState {
 }
 
 class ShoppingSuccessState extends ShoppingState {
-  ShoppingSuccessState({required List<ShopItem> itemsList})
+  ShoppingSuccessState({required List<ItemToShop> itemsList})
       : super(itemsList: itemsList);
 }
 

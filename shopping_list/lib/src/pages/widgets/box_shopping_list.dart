@@ -4,10 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:shopping_list/src/bloc/shopping_bloc.dart';
 import 'package:shopping_list/src/bloc/shopping_events.dart';
 import 'package:shopping_list/src/data/models/shop_item.dart';
+import 'package:shopping_list/src/pages/widgets/box_text_field.dart';
 import 'package:shopping_list/src/utils/validator.dart';
 
 class BoxShoppingList extends StatefulWidget {
-  final List<ShopItem> shopItemsList;
+  final List<ItemToShop> shopItemsList;
 
   const BoxShoppingList({super.key, required this.shopItemsList});
 
@@ -29,21 +30,20 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
             children: [
               Expanded(
                 child: Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    controller: _itemToShopCtrl,
-                    decoration: const InputDecoration(
-                        hintText: 'Informe o item para adicionar a lista'),
-                    validator: Validator.isRequired,
-                  ),
-                ),
+                    key: _formKey,
+                    child: BoxTextField(
+                      controller: _itemToShopCtrl,
+                      hintText: 'Informe o item para adicionar a lista',
+                      validatorFunction: Validator.isRequired,
+                    )),
               ),
               IconButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      final ShopItem itemToShop = ShopItem(
-                          isBought: false, itemName: _itemToShopCtrl.text);
+                      final ItemToShop itemToShop =
+                          ItemToShop.create(itemName: _itemToShopCtrl.text);
                       _addItem(itemToShop: itemToShop);
+                      _itemToShopCtrl.clear();
                     }
                   },
                   icon: const Icon(Icons.add)),
@@ -52,10 +52,14 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
         ),
         Expanded(
           child: ListView.separated(
-              separatorBuilder: (context, index) =>
-                  Container(color: Colors.black12, height: 2),
+              separatorBuilder: (context, index) => const Divider(
+                    height: 2,
+                    thickness: 2,
+                  ),
               itemCount: widget.shopItemsList.length,
               itemBuilder: (context, index) {
+                final ItemToShop itemToShop = widget.shopItemsList[index];
+
                 return Slidable(
                   endActionPane:
                       ActionPane(motion: const BehindMotion(), children: [
@@ -71,14 +75,7 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      context
-                                          .read<ShoppingBloc>()
-                                          .inputClient
-                                          .add(
-                                            RemoveShoppingEvent(
-                                                item: widget
-                                                    .shopItemsList[index]),
-                                          );
+                                      _deleteItem(itemToShop: itemToShop);
                                       Navigator.pop(context);
                                     },
                                     child: const Text("Excluir"),
@@ -93,12 +90,11 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
                   ]),
                   child: CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
-                    title: Text(widget.shopItemsList[index].itemName),
-                    value: false,
-                    onChanged: (value) {
-                      setState(() {
-                        widget.shopItemsList[index].isBought = value!;
-                      });
+                    title: Text(itemToShop.itemName),
+                    value: itemToShop.isBought,
+                    onChanged: (isBought) {
+                      setState(() => itemToShop.isBought = isBought!);
+                      _updateItem(item: itemToShop);
                     },
                   ),
                 );
@@ -108,10 +104,24 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
     );
   }
 
-  void _addItem({required ShopItem itemToShop}) {
+  void _addItem({required ItemToShop itemToShop}) {
     context
         .read<ShoppingBloc>()
         .inputClient
         .add(AddShoppingEvent(item: itemToShop));
+  }
+
+  void _updateItem({required ItemToShop item}) {
+    context
+        .read<ShoppingBloc>()
+        .inputClient
+        .add(UpdateItemToShopEvent(item: item));
+  }
+
+  void _deleteItem({required ItemToShop itemToShop}) {
+    context
+        .read<ShoppingBloc>()
+        .inputClient
+        .add(RemoveShoppingEvent(item: itemToShop));
   }
 }

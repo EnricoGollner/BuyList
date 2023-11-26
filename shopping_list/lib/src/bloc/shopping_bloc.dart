@@ -26,22 +26,29 @@ class ShoppingBloc {
   }
 
   Future<void> _mapEventToState(ShoppingEvent event) async {
-    List<ShopItem> items = [];
+    List<ItemToShop> items = [];
     _outputItemsController.add(ShoppingLoadingState());
 
     if (event is LoadShoppingEvent) {
       items = await shoppingRepository.getAllItemsToShop();
     } else if (event is AddShoppingEvent) {
       try {
-        await shoppingRepository.saveShopItem(event.item);
+        await shoppingRepository.addItemToShop(event.item);
         items = await shoppingRepository.getAllItemsToShop();
       } catch (e) {
         _outputItemsController
             .add(ShoppingFailureState(mensage: 'Erro ao salvar o item.\n$e'));
       }
+    } else if (event is UpdateItemToShopEvent) {
+      try {
+        await shoppingRepository.updateItem(event.item);
+        items = await shoppingRepository.getAllItemsToShop();
+      } catch (e) {
+        _outputItemsController.add(ShoppingFailureState(mensage: 'Erro ao atualizar o item.\n$e'));
+      }
     } else if (event is RemoveShoppingEvent) {
       try {
-        await shoppingRepository.deleteById(event.item.id!);
+        await shoppingRepository.deleteById(event.item.id);
         items = await shoppingRepository.getAllItemsToShop();
       } catch (e) {
         _outputItemsController

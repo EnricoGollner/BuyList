@@ -35,23 +35,28 @@ class ShoppingRepository {
     );
   }
 
-  Future<ShopItem> saveShopItem(ShopItem item) async {
+  Future<ItemToShop> addItemToShop(ItemToShop item) async {
     Database? dbItemsShop = await db;
 
-    item.id = await dbItemsShop?.insert(DBUtils.itemsToShopTable, item.toMap());
+    await dbItemsShop?.insert(
+      DBUtils.itemsToShopTable,
+      item.copyWith(id: item.id).toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
     return item;
   }
 
-  Future<List<ShopItem>> getAllItemsToShop() async {
+  Future<List<ItemToShop>> getAllItemsToShop() async {
     Database? dbItemsToShop = await db;
 
     List<Map<String, dynamic>>? listMap = await dbItemsToShop
         ?.rawQuery("SELECT * FROM ${DBUtils.itemsToShopTable}");
 
     if (listMap != null) {
-      List<ShopItem> listItemsToShop = listMap
+      List<ItemToShop> listItemsToShop = listMap
           .map(
-            (e) => ShopItem.fromMap(e),
+            (e) => ItemToShop.fromMap(e),
           )
           .toList();
       return listItemsToShop;
@@ -60,7 +65,7 @@ class ShoppingRepository {
     return [];
   }
 
-  Future<ShopItem?> getOneItem(int itemToShopId) async {
+  Future<ItemToShop?> getOneItem(String id) async {
     Database? dbItemsToShop = await db;
 
     List<Map<String, dynamic>>? maps = await dbItemsToShop?.query(
@@ -71,17 +76,17 @@ class ShoppingRepository {
         DBUtils.itemNameColumn,
       ],
       where: "${DBUtils.idColumn} = ?",
-      whereArgs: [itemToShopId],
+      whereArgs: [id],
     );
 
     if (maps != null && maps.isNotEmpty) {
-      return ShopItem.fromMap(maps.first);
+      return ItemToShop.fromMap(maps.first);
     }
 
     return null;
   }
 
-  Future<int?> deleteById(int itemToShopId) async {
+  Future<int?> deleteById(String itemToShopId) async {
     Database? dbItemsToShop = await db;
 
     return await dbItemsToShop?.delete(
@@ -91,14 +96,14 @@ class ShoppingRepository {
     );
   }
 
-  Future<int?> updateItem(ShopItem itemToShop) async {
+  Future<int?> updateItem(ItemToShop item) async {
     Database? dbItemsToShop = await db;
 
     return await dbItemsToShop?.update(
       DBUtils.itemsToShopTable,
-      itemToShop.toMap(),
+      item.toJson(),
       where: "${DBUtils.idColumn} = ?",
-      whereArgs: [itemToShop.id],
+      whereArgs: [item.id],
     );
   }
 

@@ -5,13 +5,19 @@ class ShoppingEvent {}
 class LoadShoppingEvent extends ShoppingEvent {}
 
 class AddShoppingEvent extends ShoppingEvent {
-  ShopItem item;
+  final ItemToShop item;
 
   AddShoppingEvent({required this.item});
 }
 
+class UpdateItemToShopEvent extends ShoppingEvent {
+  final ItemToShop item;
+
+  UpdateItemToShopEvent({required this.item});
+}
+
 class RemoveShoppingEvent extends ShoppingEvent {
-  ShopItem item;
+  final ItemToShop item;
 
   RemoveShoppingEvent({required this.item});
 }

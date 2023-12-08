@@ -47,21 +47,19 @@ class ShoppingRepository {
 
   Future<void> addItemsListToShop(List<ItemToShop> itemsList) async {
     Database? dbItemsShop = await db;
-
-    itemsList.map((item) async {
+    for (ItemToShop item in itemsList) {
       await dbItemsShop?.insert(
         DBUtils.itemsToShopTable,
         item.copyWith(id: item.id).toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
+        conflictAlgorithm: ConflictAlgorithm.replace,  // If the item already exists, replace it
       );
-    });
+    }
   }
 
   Future<List<ItemToShop>> getAllItemsToShop() async {
     Database? dbItemsToShop = await db;
 
-    List<Map<String, dynamic>>? listMap = await dbItemsToShop
-        ?.rawQuery("SELECT * FROM ${DBUtils.itemsToShopTable}");
+    List<Map<String, dynamic>>? listMap = await dbItemsToShop?.rawQuery("SELECT * FROM ${DBUtils.itemsToShopTable}");
 
     if (listMap != null) {
       List<ItemToShop> listItemsToShop = listMap

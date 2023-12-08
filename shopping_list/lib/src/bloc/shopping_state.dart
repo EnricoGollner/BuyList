@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:shopping_list/src/data/models/shop_item.dart';
 
-class ShoppingState {
+abstract class ShoppingState {
   final String responseMensage;
   final List<ItemToShop> itemsList;
 

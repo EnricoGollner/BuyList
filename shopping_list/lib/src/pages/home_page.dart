@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_list/src/bloc/shopping_bloc.dart';
+import 'package:shopping_list/src/bloc/shopping_events.dart';
 import 'package:shopping_list/src/pages/items_page.dart';
 import 'package:shopping_list/src/pages/message_list_page.dart';
 
@@ -10,12 +13,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   int _currentPage = 0;
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    context.read<ShoppingBloc>().inputClient.add(LoadShoppingEvent());
     _pageController = PageController(initialPage: _currentPage);
   }
 
@@ -23,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     super.dispose();
     _pageController.dispose();
+    context.read<ShoppingBloc>().dispose();
   }
 
   @override
@@ -31,13 +37,26 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Shopping List"),
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _setCurrentPage,
-        children: const [
-          ItemsPage(),
-          MessageList(),
-        ],
+      body: StreamBuilder(
+        stream: context.read<ShoppingBloc>().stream,
+        builder: (context, snaphot) {
+          if (snaphot.hasData) {
+            return PageView(
+              controller: _pageController,
+              onPageChanged: _setCurrentPage,
+              children: [
+                ItemsPage(snapshot: snaphot),
+                const MessageList(),
+              ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.green,
+              ),
+            );
+          }
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,

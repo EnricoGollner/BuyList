@@ -10,8 +10,7 @@ class ShoppingBloc {
 
   final StreamController<ShoppingEvent> _inputItemsController =
       StreamController<ShoppingEvent>();
-  final StreamController<ShoppingState> _outputItemsController =
-      StreamController<ShoppingState>();
+  final StreamController<ShoppingState> _outputItemsController = StreamController<ShoppingState>();
 
   ///Getter of Stream controller of ShoppingEvents - where we send events
   Sink<ShoppingEvent> get inputClient => _inputItemsController.sink;
@@ -25,6 +24,11 @@ class ShoppingBloc {
     });
   }
 
+  void dispose() {
+    _inputItemsController.close();
+    _outputItemsController.close();
+  }
+
   Future<void> _mapEventToState(ShoppingEvent event) async {
     List<ItemToShop> items = [];
     _outputItemsController.add(ShoppingLoadingState());
@@ -36,8 +40,14 @@ class ShoppingBloc {
         await shoppingRepository.addItemToShop(event.item);
         items = await shoppingRepository.getAllItemsToShop();
       } catch (e) {
-        _outputItemsController
-            .add(ShoppingFailureState(mensage: 'Erro ao salvar o item.\n$e'));
+        _outputItemsController.add(ShoppingFailureState(mensage: 'Erro ao salvar o item.\n$e'));
+      }
+    } else if (event is AddListShoppingEvent) {
+      try {
+        await shoppingRepository.addItemsListToShop(event.itemsList);
+        items = await shoppingRepository.getAllItemsToShop();
+      } catch (e) {
+        _outputItemsController.add(ShoppingFailureState(mensage: 'Erro ao atualizar o item.\n$e'));
       }
     } else if (event is UpdateItemToShopEvent) {
       try {
@@ -51,8 +61,7 @@ class ShoppingBloc {
         await shoppingRepository.deleteById(event.item.id);
         items = await shoppingRepository.getAllItemsToShop();
       } catch (e) {
-        _outputItemsController
-            .add(ShoppingFailureState(mensage: 'Erro ao remover item\n$e'));
+        _outputItemsController.add(ShoppingFailureState(mensage: 'Erro ao remover item\n$e'));
       }
     }
 

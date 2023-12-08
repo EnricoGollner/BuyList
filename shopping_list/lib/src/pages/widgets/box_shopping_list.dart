@@ -105,23 +105,14 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
   }
 
   void _addItem({required ItemToShop itemToShop}) {
-    context
-        .read<ShoppingBloc>()
-        .inputClient
-        .add(AddShoppingEvent(item: itemToShop));
+    context.read<ShoppingBloc>().inputClient.add(AddShoppingEvent(item: itemToShop));
   }
 
   void _updateItem({required ItemToShop item}) {
-    context
-        .read<ShoppingBloc>()
-        .inputClient
-        .add(UpdateItemToShopEvent(item: item));
+    context.read<ShoppingBloc>().inputClient.add(UpdateItemToShopEvent(item: item));
   }
 
   void _deleteItem({required ItemToShop itemToShop}) {
-    context
-        .read<ShoppingBloc>()
-        .inputClient
-        .add(RemoveShoppingEvent(item: itemToShop));
+    context.read<ShoppingBloc>().inputClient.add(RemoveShoppingEvent(item: itemToShop));
   }
 }

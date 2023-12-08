@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_list/src/bloc/shopping_bloc.dart';
+import 'package:shopping_list/src/bloc/shopping_events.dart';
+import 'package:shopping_list/src/data/models/shop_item.dart';
+import 'package:shopping_list/src/pages/widgets/box_text_field.dart';
+import 'package:shopping_list/src/utils/validator.dart';
 
 class MessageList extends StatefulWidget {
   const MessageList({super.key});
@@ -8,8 +14,14 @@ class MessageList extends StatefulWidget {
 }
 
 class _MessageListState extends State<MessageList> {
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _listController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,20 +42,12 @@ class _MessageListState extends State<MessageList> {
             const SizedBox(height: 10),
             Form(
               key: _formKey,
-              child: TextFormField(
+              child: BoxTextField(
                 controller: _listController,
                 keyboardType: TextInputType.multiline,
                 maxLines: 15,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Exemplo:\nArroz\nFeijão\nAlface\n...",
-                ),
-                validator: (text) {
-                  if (text == null || text.isEmpty) {
-                    return "Informe a lista para salvar";
-                  }
-                  return null;
-                },
+                hintText: "Exemplo:\nArroz\nFeijão\nAlface\n...",
+                validatorFunction: Validator.isRequired,
               ),
             ),
             const SizedBox(height: 10),
@@ -59,6 +63,7 @@ class _MessageListState extends State<MessageList> {
                       backgroundColor: Colors.green,
                     ),
                   );
+                  _addItemsFromMessage(messageList: _listController.text);
                 }
               },
               child: const Text("Salvar lista"),
@@ -69,18 +74,20 @@ class _MessageListState extends State<MessageList> {
     );
   }
 
-  List<String> formatToList(String listMessage) {
+  void _addItemsFromMessage({required String messageList}) {
+    List<String> listFromMessage = _formatToList(messageList);
+
+    List<ItemToShop> itemsList = listFromMessage
+        .map(
+          (itemName) => ItemToShop.create(itemName: itemName),
+        )
+        .toList();
+
+    context.read<ShoppingBloc>().inputClient.add(AddListShoppingEvent(itemsList: itemsList));
+  }
+
+  List<String> _formatToList(String listMessage) {
     List<String> list = listMessage.split("\n");
     return list;
   }
-
-  // void add(String listMessage) {
-  //   List<String> listFromMessage = formatToList(listMessage);
-
-  //   List<ShopItem> list = listFromMessage
-  //       .map(
-  //         (item) => ShopItem.fromItemStr(item),
-  //       )
-  //       .toList();
-  // }
 }

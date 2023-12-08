@@ -35,7 +35,7 @@ class ShoppingRepository {
     );
   }
 
-  Future<ItemToShop> addItemToShop(ItemToShop item) async {
+  Future<void> addItemToShop(ItemToShop item) async {
     Database? dbItemsShop = await db;
 
     await dbItemsShop?.insert(
@@ -43,8 +43,18 @@ class ShoppingRepository {
       item.copyWith(id: item.id).toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
 
-    return item;
+  Future<void> addItemsListToShop(List<ItemToShop> itemsList) async {
+    Database? dbItemsShop = await db;
+
+    itemsList.map((item) async {
+      await dbItemsShop?.insert(
+        DBUtils.itemsToShopTable,
+        item.copyWith(id: item.id).toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    });
   }
 
   Future<List<ItemToShop>> getAllItemsToShop() async {

@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late ShoppingBloc _shoppingBloc;
 
   int _currentPage = 0;
   late PageController _pageController;
@@ -20,7 +21,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<ShoppingBloc>().inputClient.add(LoadShoppingEvent());
+    _shoppingBloc = Provider.of<ShoppingBloc>(context, listen: false);
+    _shoppingBloc.inputClient.add(LoadShoppingEvent());
+
     _pageController = PageController(initialPage: _currentPage);
   }
 
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     super.dispose();
     _pageController.dispose();
-    context.read<ShoppingBloc>().dispose();
+    _shoppingBloc.dispose();
   }
 
   @override
@@ -38,7 +41,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Shopping List"),
       ),
       body: StreamBuilder(
-        stream: context.read<ShoppingBloc>().stream,
+        stream: _shoppingBloc.stream,
         builder: (context, snaphot) {
           if (snaphot.hasData) {
             return PageView(
@@ -60,6 +63,9 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,
+        onTap: (pageIndex) {
+          _pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 400), curve: Curves.ease);
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -70,10 +76,6 @@ class _HomePageState extends State<HomePage> {
             label: "Inserir por mensagem",
           ),
         ],
-        onTap: (pageIndex) {
-          _pageController.animateToPage(pageIndex,
-              duration: const Duration(milliseconds: 400), curve: Curves.ease);
-        },
       ),
     );
   }

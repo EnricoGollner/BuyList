@@ -30,31 +30,36 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
             children: [
               Expanded(
                 child: Form(
-                    key: _formKey,
-                    child: BoxTextField(
-                      controller: _itemToShopCtrl,
-                      hintText: 'Informe o item para adicionar a lista',
-                      validatorFunction: Validator.isRequired,
-                    )),
+                  key: _formKey,
+                  child: BoxTextField(
+                    controller: _itemToShopCtrl,
+                    hintText: 'Informe o item para adicionar a lista',
+                    validatorFunction: Validator.isRequired,
+                  ),
+                ),
               ),
               IconButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final ItemToShop itemToShop =
-                          ItemToShop.create(itemName: _itemToShopCtrl.text);
-                      _addItem(itemToShop: itemToShop);
-                      _itemToShopCtrl.clear();
-                    }
-                  },
-                  icon: const Icon(Icons.add)),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final ItemToShop itemToShop =
+                        ItemToShop.create(itemName: _itemToShopCtrl.text);
+                    _addItem(itemToShop: itemToShop);
+                    _itemToShopCtrl.clear();
+                  }
+                },
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.green,
+                ),
+              ),
             ],
           ),
         ),
         Expanded(
           child: ListView.separated(
               separatorBuilder: (context, index) => const Divider(
-                    height: 2,
-                    thickness: 2,
+                    height: 1,
+                    thickness: 1,
                   ),
               itemCount: widget.shopItemsList.length,
               itemBuilder: (context, index) {
@@ -105,14 +110,23 @@ class _BoxShoppingListState extends State<BoxShoppingList> {
   }
 
   void _addItem({required ItemToShop itemToShop}) {
-    context.read<ShoppingBloc>().inputClient.add(AddShoppingEvent(item: itemToShop));
+    context
+        .read<ShoppingBloc>()
+        .inputClient
+        .add(AddShoppingEvent(item: itemToShop));
   }
 
   void _updateItem({required ItemToShop item}) {
-    context.read<ShoppingBloc>().inputClient.add(UpdateItemToShopEvent(item: item));
+    context
+        .read<ShoppingBloc>()
+        .inputClient
+        .add(UpdateItemToShopEvent(item: item));
   }
 
   void _deleteItem({required ItemToShop itemToShop}) {
-    context.read<ShoppingBloc>().inputClient.add(RemoveShoppingEvent(item: itemToShop));
+    context
+        .read<ShoppingBloc>()
+        .inputClient
+        .add(RemoveShoppingEvent(item: itemToShop));
   }
 }

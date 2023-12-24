@@ -13,12 +13,13 @@ class BoxTextField extends StatelessWidget {
       this.validatorFunction,
       required this.controller,
       this.keyboardType = TextInputType.text,
-      this.maxLines, });
+      this.maxLines});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      onTapOutside: (pointDownEvent) => FocusManager.instance.primaryFocus?.unfocus(),
       decoration: InputDecoration(
         hintText: hintText,
         enabledBorder: const OutlineInputBorder(
@@ -34,8 +35,6 @@ class BoxTextField extends StatelessWidget {
           borderSide: BorderSide(color: Colors.green, width: 2),
         ),
       ),
-      onTapOutside: (pointDownEvent) =>
-          FocusManager.instance.primaryFocus?.unfocus(),
       validator: validatorFunction,
       keyboardType: keyboardType,
       maxLines: maxLines,

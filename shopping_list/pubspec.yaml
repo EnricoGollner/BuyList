@@ -13,6 +13,18 @@ dependencies:
   provider: ^6.1.1
   flutter_slidable: ^3.0.1
   uuid: ^4.2.1
+  flutter_native_splash: ^2.3.8
+
+flutter_native_splash:
+  color: "#42a5f5"
+  # image: assets/android12splash.png
+
+  android_12:
+    color: "#42a5f5"
+    # image: assets/android12splash.png
+  # Comand to create flutter_native_splash:
+  # dart run flutter_native_splash:create
+
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shopping_list/src/bloc/shopping_bloc.dart';
 import 'package:shopping_list/src/bloc/shopping_events.dart';
 import 'package:shopping_list/src/data/models/shop_item.dart';
+import 'package:shopping_list/src/pages/widgets/box_snack_bar.dart';
 import 'package:shopping_list/src/pages/widgets/box_text_field.dart';
 import 'package:shopping_list/src/utils/validator.dart';
 
@@ -14,7 +15,6 @@ class MessageList extends StatefulWidget {
 }
 
 class _MessageListState extends State<MessageList> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _listController = TextEditingController();
 
@@ -27,8 +27,7 @@ class _MessageListState extends State<MessageList> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.all(11),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -52,17 +51,15 @@ class _MessageListState extends State<MessageList> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(padding: const EdgeInsets.all(14)),
+              style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(14)),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Adicionando lista..."),
-                      duration: Duration(seconds: 1, milliseconds: 2),
-                      backgroundColor: Colors.green,
-                    ),
+                  showSnackBar(
+                    context,
+                    message: 'Adicionando lista...',
+                    backgroundColor: Colors.greenAccent,
                   );
+
                   _addItemsFromMessage(messageList: _listController.text);
                 }
               },
@@ -77,13 +74,18 @@ class _MessageListState extends State<MessageList> {
   void _addItemsFromMessage({required String messageList}) {
     List<String> listFromMessage = _formatToList(messageList);
 
-    List<ItemToShop> itemsList = listFromMessage
-        .map(
+    List<ItemToShop> itemsList = listFromMessage.map(
           (itemName) => ItemToShop.create(itemName: itemName),
-        )
-        .toList();
+        ).toList();
 
-    context.read<ShoppingBloc>().inputClient.add(AddListShoppingEvent(itemsList: itemsList));
+    Provider.of<ShoppingBloc>(context, listen: false).inputClient.add(AddListShoppingEvent(itemsList: itemsList));
+
+    showSnackBar(
+      context,
+      message: 'Lista adicionada com sucesso!',
+      backgroundColor: Colors.green,
+      behavior: SnackBarBehavior.floating,
+    );
   }
 
   List<String> _formatToList(String listMessage) {
